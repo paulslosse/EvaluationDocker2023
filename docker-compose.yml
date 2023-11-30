@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0
+    build:
+      context: ./MYSQL
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./MYSQL/dockerdb.sql:/docker-entrypoint-initdb.d/dockerdb.sql
+
+  api:
+    build: ./SERVER
+    volumes:
+      - ./SERVER:/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql
+
+  clientreact:
+    build: ./clientreact
+    volumes:
+      - ./clientreact:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+
+volumes:
+  mysql:
