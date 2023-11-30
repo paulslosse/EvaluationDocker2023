@@ -12,6 +12,8 @@ services:
       - "3002:3002"
     volumes:
       - ./MYSQL/dockerdb.sql:/docker-entrypoint-initdb.d/dockerdb.sql
+    networks:
+      - docker-network
 
   api:
     build: ./SERVER
@@ -21,6 +23,8 @@ services:
       - "3001:3001"
     depends_on:
       - mysql
+    networks:
+      - docker-network
 
   clientreact:
     build: ./clientreact
@@ -30,7 +34,12 @@ services:
       - "3000:3000"
     depends_on:
       - api
+    networks:
+      - docker-network
 
 
 volumes:
   mysql:
+
+networks:
+    docker-network:
